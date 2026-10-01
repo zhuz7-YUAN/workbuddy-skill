@@ -1,0 +1,67 @@
+{
+  "_note": "问询文案模板。占位符：{name} {school} {faculty} {start} {end_date} {budget} {phone} {email} {addr}。outreach.py 负责替换与发送。",
+  "_placeholder_hint": "end_date 建议填成 'fine gennaio 2027' 这样带月份的词组，读起来更自然。",
+  "it": {
+    "first_contact": {
+      "subject": "Stanza singola per studente exchange - fino a {end_date}",
+      "body": "Buongiorno,\n\nscrivo per conto di {name}, studente/studentessa in exchange all'Università di {school} ({faculty}).\n\nCerchiamo una stanza singola (o un posto letto):\n\n  - disponibile da {start}\n  - periodo: fino a {end_date}\n  - budget {budget} al mese, spese incluse se possibile\n  - non fuma, molto ordinato/a\n\nLe scrivo perché molte inserzioni richiedono una permanenza minima di 12 mesi,\nche in questo caso non è possibile: rientra a casa a {end_date} e non può\nrestare oltre.\n\nLe chiedo quindi, in una sola volta:\n  1) L'annuncio è ANCORA disponibile?\n  2) È possibile un contratto più breve (4-6 mesi)?\n  3) In alternativa, accettereste un subentro? Possiamo trovare noi un altro\n     studente che subentri dalla sua partenza, così la stanza non vi resta\n     vuota e voi non dovete cercare nessuno.\n  4) Qual è il canone, quanto sono le spese extra e la caparra?\n  5) Ci sono limitazioni (solo studenti / lavoratori, solo ragazze / ragazzi)?\n  6) Che tipo di contratto è? È registrato regolarmente?\n  7) È possibile visitarla questa settimana?\n\nHa già il codice fiscale, è pronta/o a firmare un contratto regolare\ne a versare subito la caparra.\n\nGrazie mille per la disponibilità, resto in attesa di un suo riscontro.\nCordiali saluti,\n{sender_name}\n(scrivo da un indirizzo di famiglia - potete rispondere qui)\n"
+    },
+    "board_form": {
+      "subject": "Richiesta informazioni - stanza singola",
+      "body": "Buongiorno, l'annuncio è ancora disponibile?\n\nSono {name}, studente/studentessa exchange all'Università di {school}.\nIl contratto richiede 12 mesi, ma a me servono solo fino a {end_date}:\nè possibile? In alternativa posso trovare io uno studente che subentri.\n\nQual è il canone con spese extra e caparra?\nPosso visitare la stanza questa settimana? Grazie.\n{name}"
+    },
+    "dm": {
+      "subject": "",
+      "body": "Buongiorno! Sono {name}, studente/studentessa exchange all'Università di {school}.\nHo visto il suo annuncio nel gruppo e sono molto interessato/a.\n\nCerco da subito fino a {end_date} — posso restare tutto il periodo senza\ninterruzioni, quindi non dovrete cercare nessuno a metà.\nHo già il codice fiscale, posso firmare un contratto regolare e pagare subito.\n\nL'annuncio è ancora disponibile? Posso visitare questa settimana?\nGrazie mille!"
+    },
+    "followup": {
+      "subject": "Re: stanza singola - conferma disponibilità",
+      "body": "Buongiorno,\n\ntorno a chiederle solo una conferma: la stanza è ancora disponibile?\nResto disponibile per una visita anche oggi o domani.\n\nGrazie,\n{sender_name}"
+    },
+    "confirm_viewing": {
+      "subject": "Conferma appuntamento",
+      "body": "Buongiorno,\n\nconfermo la visita per {addr}.\nIl mio numero è {phone}. Avviso subito se dovessi ritardare.\n\nGrazie, a presto.\n{name}"
+    },
+    "group_apply": {
+      "subject": "",
+      "body": "Buongiorno! Sono {name}, studente/studentessa exchange all'Università di {school} ({faculty}).\nCerco una stanza singola o un posto letto da {start} fino a {end_date} (circa 4 mesi).\nHo già il codice fiscale, posso firmare un contratto regolare e pagare subito caparra\ne primo mese. Resto tutto il periodo senza interruzioni.\nPotreste aggiungermi al gruppo? Grazie mille!"
+    },
+    "group_post": {
+      "subject": "",
+      "body": "🇨🇳 Studente/studentessa cinese in exchange alla {school}, cerca stanza singola o posto letto\n   da {start} fino a {end_date}. Codice fiscale già pronto, contratto regolare, caparra subito.\n   Resto tutto il periodo senza interruzioni. Budget {budget}. Zona: {addr}.\n🇮🇹 Cerco da {start} a {end_date} — se avete una stanza o conoscete qualcuno che parte,\n   scrivetemi in privato. Posso venire a vedere oggi o domani.\n📩 {phone} — {name}"
+    }
+  },
+  "en": {
+    "first_contact": {
+      "subject": "Single room for exchange student - until {end_date}",
+      "body": "Hello,\n\nI am writing on behalf of {name}, an exchange student at {school} ({faculty}).\n\nWe are looking for a single room (or a bed in a shared room):\n\n  - available from {start}\n  - until {end_date}\n  - budget {budget} per month, bills included if possible\n  - non-smoker, very tidy\n\nMost listings require a 12-month minimum stay, which is not possible here:\nthe student returns home at {end_date}.\n\nCould you please confirm, all at once:\n  1) Is the listing still available?\n  2) Is a shorter contract possible (4-6 months)?\n  3) If not, would you accept a sublease takeover (subentro)? We can find\n     another student to take over, so the room does not stay empty.\n  4) What is the rent, the extra monthly costs and the deposit?\n  5) Are there restrictions (students/workers, female/male only)?\n  6) What type of contract is it? Is it officially registered?\n  7) Could we arrange a viewing this week?\n\nThe student already has the tax code, is ready to sign a proper contract\nand to pay the deposit immediately.\n\nThank you very much for your time.\nBest regards,\n{sender_name}\n(writing from a family address - please reply here)\n"
+    },
+    "followup": {
+      "subject": "Re: single room - availability check",
+      "body": "Hello,\n\nJust a quick follow-up: is the room still available?\nWe are available for a viewing today or tomorrow.\n\nThank you,\n{sender_name}"
+    },
+    "group_apply": {
+      "subject": "",
+      "body": "Hi! I'm {name}, a Chinese exchange student at {school} ({faculty}).\nI'm looking for a single room or a bed from {start} until {end_date} (about 4 months).\nI already have the tax code, can sign a regular contract and pay the deposit and first\nmonth immediately. I will stay for the whole period without interruption.\nCould you please add me to the group? Thank you very much!"
+    },
+    "group_post": {
+      "subject": "",
+      "body": "🇨🇳🇬🇧 Chinese exchange student at {school}, looking for a single room or a bed\n   from {start} until {end_date}. Tax code ready, regular contract, deposit ready.\n   I will stay the whole period without interruption. Budget {budget}. Area: {addr}.\n   If you have a room or know someone leaving, please message me - I can come and\n   see it today or tomorrow.\n📩 {phone} - {name}"
+    }
+  },
+  "zh": {
+    "group_apply": {
+      "subject": "",
+      "body": "你好，我是{name}，中国学生，在{school}（{faculty}）交换。\n想找{start}起到{end_date}的房间（约 4 个月），单间或床位都可以。\n已有身份号，可以签正规合同、可以立刻付押金和首月租，全程住满不中断。\n如果方便请拉我进群，谢谢！"
+    },
+    "group_post": {
+      "subject": "",
+      "body": "【求租】中国交换生，{school}，{start} → {end_date}，找单间/床位。\n已有身份号，可签正规合同、立刻付押金，全程住满不中断。预算 {budget}。\n有意请私信/回帖，我随时可以去看房。\n📩 {phone} — {name}"
+    },
+    "first_contact": {
+      "subject": "求租单间 - {school} 交换生（到 {end_date}）",
+      "body": "您好，\n\n我代{name}写这封信，她是{school}（{faculty}）的交换生。\n\n我们在找一间单间（或合租床位）：\n\n  - 起租：{start}\n  - 租期：到 {end_date}\n  - 预算：{budget}/月，最好含杂费\n  - 不吸烟，很爱干净\n\n之所以联系您，是因为很多房源要求最短租 12 个月，而她 {end_date} 就必须回国，\n无法住满。所以想一次问清以下几点：\n\n  1) 房源现在还在吗？\n  2) 可以签短一点的合同（4–6 个月）吗？\n  3) 如果不行，是否接受转租接手（subentro）？我们可以自己找学生接手，\n     房间不会空着，您也不用再找人。\n  4) 租金、每月杂费、押金分别是多少？\n  5) 有什么限制吗（只租学生/上班族、只租女生/男生）？\n  6) 合同是什么类型？是正规注册的吗？\n  7) 这周可以看房吗？\n\n她已有税号，可以签正规合同，也可以立刻付押金。\n\n感谢您的时间，期待回复。\n{sender_name}\n（这是我们家庭的邮箱，可以直接回复这里）"
+    }
+  },
+  "_signature_note": "邮件类模板（first_contact/followup/confirm_viewing）署名用 {sender_name}（代租时=委托人）；学生本人在群/DM 里发的模板（dm/group_apply/group_post/board_form）署名用 {name}（租客本人）。onboard.py 保证 sender_name 有回退值。"
+}

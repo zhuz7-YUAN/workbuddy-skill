@@ -1,0 +1,2 @@
+{"ts": "2026-08-24 16:05:28", "skill": "gzh-autopilot", "action": "test_action", "success": false, "platform": "unittest", "model": "", "error_code": "E_TEST", "error_msg": "***[已脱敏]*** check", "note": ""}
+{"ts": "2026-08-24 16:07:48", "skill": "gzh-autopilot", "action": "test_action", "success": false, "platform": "unittest", "model": "", "error_code": "E_TEST", "error_msg": "***[已脱敏]*** check", "note": ""}
