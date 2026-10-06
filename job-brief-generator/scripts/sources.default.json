@@ -1,0 +1,239 @@
+{
+  "version": 3,
+  "updated": "2026-10-05",
+  "_readme": [
+    "招聘信息源清单。三个脚本共用这一份：official_sources_scan.py / official_sources_portal.py / spa_job_scrape.py。",
+    "channel 字段决定用哪条通道抓，取值：",
+    "  curl    = 静态页，普通 HTTP 请求就能读（最省资源）",
+    "  webfetch= 直连会被拦（空包/断连），需要用 AI 的网页读取能力（WebFetch）",
+    "  browser = JS 动态渲染（SPA），必须用 Edge CDP 真渲染（spa_job_scrape.py）",
+    "  manual  = 实测抓不到，只能『给链接让用户自己点』（portal 脚本会生成入口 + 一键搜索）",
+    "  search  = 无固定列表页，只能用关键词检索",
+    "type 字段类别：央企平台 / 国家级 / 军队系统 / 人社系统 / 地方国企 / 高校就业网 / 企业官网 / 官方官网 / 公开招聘平台 / 公众号。",
+    "★ v3 新增【军队系统】三类源（军队文职/征兵网/各军种检索式）——此前完全遗漏，实测可直抓。",
+    "region 字段：national 全国通用 / 其他为城市或省份标识。",
+    "★ 各省结构高度相似，照着抄：『XX省人力资源和社会保障厅 - 事业单位公开招聘』『XX省人事考试网』『XX省大学生就业服务平台（或 91wllm 分站）』。",
+    "★ 本文件为【示例城市：武汉/湖北】。换成你自己的城市：把 region 为 hubei/wuhan 的条目替换成当地对应站点即可。",
+    "★ 各省结构高度相似：『XX省人社厅 - 事业单位公开招聘』『XX省人事考试网』『XX省大学生就业服务平台（或 91wllm 分站）』『本地重点高校就业网』。",
+    "★ 注意：把示例里的具体单位换成你所在地区的，别把示例城市当成默认值。"
+  ],
+  "sources": [
+    {
+      "name": "国资委·央企招聘专栏",
+      "type": "央企平台",
+      "region": "national",
+      "channel": "curl",
+      "url": "http://www.sasac.gov.cn/n2588035/n2588325/n2588350/index.html",
+      "note": "央企集团总部招聘公告。实测一次 30+ 条 2027 届校招，静态可直抓，含分页。"
+    },
+    {
+      "name": "国聘·校园招聘",
+      "type": "央企平台",
+      "region": "national",
+      "channel": "browser",
+      "url": "https://xiaoyuan.iguopin.com/",
+      "note": "★央企校招主入口（国聘的独立校招子域，比主站好抓）。实测渲染出 10+ 条央企校招 + 多场进行中线上双选会。主站 www.iguopin.com 的岗位列表要登录，别去。"
+    },
+    {
+      "name": "国聘·社会招聘",
+      "type": "央企平台",
+      "region": "national",
+      "channel": "browser",
+      "url": "https://www.iguopin.com/job?channel=social",
+      "note": "面向社会/往届的央企国企岗位流。"
+    },
+    {
+      "name": "国聘·招聘会",
+      "type": "央企平台",
+      "region": "national",
+      "channel": "manual",
+      "url": "https://zp.iguopin.com/",
+      "note": "渲染后可读正文但取不到岗位链接 → 给入口让用户自己点。"
+    },
+    {
+      "name": "国家大学生就业服务平台 24365",
+      "type": "国家级",
+      "region": "national",
+      "channel": "browser",
+      "url": "https://www.ncss.cn/student/jobs/index.html",
+      "note": "岗位经 XHR/JSON 加载；用浏览器渲染后可读。也可逆向其 JSON 接口（需带 Referer）。"
+    },
+    {
+      "name": "中国公共招聘网（人社部）",
+      "type": "国家级",
+      "region": "national",
+      "channel": "manual",
+      "url": "https://job.mohrss.gov.cn/cjobs/jobinfolist/listJobinfolist?pageNo=1&orderType=score",
+      "note": "多地网络环境不可达（实测连接超时）。若你的网络能打开，可改 channel 为 curl 并试地区筛选参数。"
+    },
+    {
+      "name": "军队人才网·文职人员",
+      "type": "军队系统",
+      "region": "national",
+      "channel": "curl",
+      "url": "http://81rc.81.cn/wzry/index.html",
+      "note": "★**此前完全遗漏，2026-10-05 实测可直抓**（HTTP 200 / 28675 字节 / 站点标题『中国人民解放军专业技术人才网』）。军队文职（含技术岗）全国统考唯一官方入口，公告常年半夜挂网。配套：工作动态栏 http://81rc.81.cn/sy/gzdt_210283/index.html （招考公告/直招公告）。"
+    },
+    {
+      "name": "军队人才网·工作动态（直招公告）",
+      "type": "军队系统",
+      "region": "national",
+      "channel": "curl",
+      "url": "http://81rc.81.cn/sy/gzdt_210283/index.html",
+      "note": "★★**价值最高的一条军队源**，2026-10-05 实测可直抓、一次 33 条。各军种/部队的『直接选拔招录军官/文职』公告全发在这里（实测含武警部队/63650部队/国防科技大学/国防大学/军事科学院/联勤保障部队/信息支援部队/网络空间部队/军事航天部队/火箭军/空军/海军 2026-2027 年度公告，多数 2026-09-07 发布）。这类岗面向应届本科直招，专业对口即可，**比文职统考的笔试门槛低**。"
+    },
+    {
+      "name": "中国征兵网（直招军士/直招军官）",
+      "type": "军队系统",
+      "region": "national",
+      "channel": "curl",
+      "url": "https://www.gfbzb.gov.cn",
+      "note": "实测 HTTP 200 / 33808 字节。直招军士（面向普通高校毕业生，理工科专业对口）与直招军官（'双一流'本科直招）报名入口，学历与专业要求写在公告里。"
+    },
+    {
+      "name": "各军种/战区人才招聘（兵种官网）",
+      "type": "军队系统",
+      "region": "national",
+      "channel": "search",
+      "url": "",
+      "note": "陆军/海军/空军/火箭军/战支/联勤保障部队、各战区均无统一招聘列表页，岗位散在各自官网与公众号。检索式：`直招军官 2027 应届 <军种名>`、`文职 岗位表 site:81rc.81.cn`、`军队文职 湖北 岗位`。命中即给原文链接。"
+    },
+    {
+      "name": "武汉市人力资源和社会保障局",
+      "type": "人社系统",
+      "region": "wuhan",
+      "channel": "curl",
+      "url": "https://rsj.wuhan.gov.cn",
+      "note": "实测 HTTP 200 / 58209 字节。武汉市本级事业单位公开招聘、市属国企岗。找子栏：『事业单位招聘』『通知公告』。"
+    },
+    {
+      "name": "广东省人社厅·事业单位公开招聘（出省参考）",
+      "type": "人社系统",
+      "region": "guangdong",
+      "channel": "curl",
+      "url": "https://hrss.gd.gov.cn/zwgk/sydwzp/index.html",
+      "note": "实测 HTTP 200 / 30622 字节 / 标题『事业单位公开招聘』。广东省直事业编统一发布栏，出省参考。**其它省份照抄本模式**：『XX省人社厅 - 事业单位公开招聘』。"
+    },
+    {
+      "name": "湖北省人社厅·省属事业单位公开招聘",
+      "type": "人社系统",
+      "region": "wuhan",
+      "channel": "curl",
+      "url": "http://rst.hubei.gov.cn/bmdt/ztzl/ywzl/hbsszsydwgkzp/",
+      "note": "★事业单位『半夜挂网』重灾区，静态带日期，直抓。目录含 zpgg(公告)/zprygs(公示)/xgxz(下载) 等子栏。"
+    },
+    {
+      "name": "湖北人事考试网·事业单位招聘考试",
+      "type": "人社系统",
+      "region": "wuhan",
+      "channel": "curl",
+      "url": "https://rst.hubei.gov.cn/hbrsksw/zlplks/hbssydwzpks/",
+      "note": "★**必须进这个子栏**，首页只是导航（各站结构类似）。"
+    },
+    {
+      "name": "湖北 91wllm 省级就业平台",
+      "type": "官方官网",
+      "region": "wuhan",
+      "channel": "curl",
+      "url": "https://www.91wllm.cn",
+      "note": "★国企校招最密集的省级平台。实测一次 59 条，含中国中铁大桥院/中国通号/中建/华能/北汽/邮储/九洲等。"
+    },
+    {
+      "name": "武汉人才集团",
+      "type": "地方国企",
+      "region": "wuhan",
+      "channel": "browser",
+      "url": "https://www.whzsrc.com/",
+      "note": "武汉国企/事业单位岗。渲染后**正文能读到岗位标题，但取不到链接** → 正文照抄标题 + 给入口。"
+    },
+    {
+      "name": "武汉大学就业信息网",
+      "type": "高校就业网",
+      "region": "wuhan",
+      "channel": "browser",
+      "url": "https://xsjy.whu.edu.cn/",
+      "note": "★实测渲染出 25 条带日期的真实校招岗及可点链接（形如 /f/recruitmentinfo/show?recruitmentId=<32位id>）。"
+    },
+    {
+      "name": "华中科技大学就业信息网",
+      "type": "高校就业网",
+      "region": "wuhan",
+      "channel": "webfetch",
+      "url": "https://job.hust.edu.cn/zpxx123123/index.htm",
+      "note": "★静态服务端渲染，但**直连批量请求会被强制断连（IP 限流）→ 用 WebFetch，且每天只读 1 次**。宣讲会栏 /xjssd123123/index.htm。"
+    },
+    {
+      "name": "武汉理工大学就业信息网",
+      "type": "高校就业网",
+      "region": "wuhan",
+      "channel": "browser",
+      "url": "https://scc.whut.edu.cn/",
+      "note": "Vue SPA。渲染后可读正文，链接常取不到 → 同武汉人才集团处理。"
+    },
+    {
+      "name": "中国地质大学(武汉)就业网",
+      "type": "高校就业网",
+      "region": "wuhan",
+      "channel": "manual",
+      "url": "http://cug.91wllm.cn/news/index/tag/zpxx",
+      "note": "列表二次加载，渲染后正文极短 → 给入口 + 一键搜索。详情页 /news/view/aid/<id> 是静态的，可从搜索结果直达。"
+    },
+    {
+      "name": "武汉工程大学就业网",
+      "type": "高校就业网",
+      "region": "wuhan",
+      "channel": "manual",
+      "url": "http://wit.91wllm.cn/news/index/tag/zpxx",
+      "note": "同中国地质大学。"
+    },
+    {
+      "name": "华为招聘",
+      "type": "企业官网",
+      "region": "national",
+      "channel": "browser",
+      "url": "https://career.huawei.com/reccampportal/portal5/index.html",
+      "note": "AEM 站点，JS 注入，无静态列表。"
+    },
+    {
+      "name": "中兴通讯校招",
+      "type": "企业官网",
+      "region": "national",
+      "channel": "manual",
+      "url": "https://job.zte.com.cn/",
+      "note": "纯 SPA 且无内页被搜索引擎收录（site: 查 0 条）→ 只能给栏目入口人工点。"
+    },
+    {
+      "name": "中国建筑集团校招",
+      "type": "企业官网",
+      "region": "national",
+      "channel": "manual",
+      "url": "https://recruit.cscec.com/recruit",
+      "note": "渲染后仅 273 字，抓不到。"
+    },
+    {
+      "name": "中国石油招聘",
+      "type": "企业官网",
+      "region": "national",
+      "channel": "manual",
+      "url": "https://zhaopin.cnpc.com.cn/",
+      "note": "HTTP 412 + JS 反爬挑战，列表与详情翻页全被拦 → 只能人工打开。"
+    },
+    {
+      "name": "BOSS直聘 / 猎聘 / 智联 / 前程无忧 / 应届生求职网",
+      "type": "公开招聘平台",
+      "region": "national",
+      "channel": "search",
+      "url": "",
+      "note": "**降级为二级补充**（占岗位数 ≤40%）。国企/事业单位岗位首选官网，平台只用来补漏。检索式：site:zhipin.com <关键词> 应届 <城市>。"
+    },
+    {
+      "name": "微信公众号（经搜狗微信入口）",
+      "type": "公众号",
+      "region": "national",
+      "channel": "search",
+      "url": "https://weixin.sogou.com/weixin?type=2&query=",
+      "note": "能出真实公众号文章（国聘、各省国企招聘号、事业单位考试号）。**高频会弹验证码**：每次只用 1-2 次查询并限速。"
+    }
+  ],
+  "_privacy": "本文件不含个人身份信息；示例城市仅为演示，请替换为你自己的城市。"
+}

@@ -1,0 +1,154 @@
+{
+  "_note": "前置准备清单。stages 按时间顺序；blocking=true 的项没做完，后面阶段会卡死。prep_check.py 读这个文件渲染与门禁。",
+  "stages": [
+    { "id": "now",            "name": "阶段0 · 现在（还没找到房的时候就该办）" },
+    { "id": "before_search",  "name": "阶段1 · 开始找房前" },
+    { "id": "before_viewing", "name": "阶段2 · 看房前" },
+    { "id": "before_signing", "name": "阶段3 · 签约前" },
+    { "id": "after_moving",   "name": "阶段4 · 入住后（不做会拖累居留/退押金）" }
+  ],
+  "items": [
+    {
+      "id": "identity_roles", "stage": "now", "blocking": true, "lead_time": "当天",
+      "title": "初始化访谈：谁住 / 谁办 / 发件箱 / 收件箱 / 抄送策略",
+      "why": "技能不能假设'租客＝用户＝同一人'。代租时署名、口吻、发件邮箱、进度同步全都不同；抄送若不加约束，会把未核实的假消息一起抄给家人，等于把筛选成本转嫁过去。",
+      "how": "跑 python scripts/onboard.py init 生成 renter.json，按 references/onboarding.md 的四组问题（A 谁住 / B 谁办 / C 邮件链路 / D 目标）逐项填；check 校验；show 打印'谁—发—收—抄'表。发件箱建议用委托人的邮箱，抄送策略建议 confirmed_only。"
+    },
+    {
+      "id": "codice_fiscale", "stage": "now", "blocking": true, "lead_time": "1–2 周",
+      "title": "办意大利税号 Codice Fiscale",
+      "why": "签任何正规合同、租房登记、办居留、开银行账户都要它。没有它房东可以直接拒绝你。",
+      "how": "到 Agenzia delle Entrate（税务局）凭护照+签证办，当场出；也可先在国内使领馆咨询。交换生通常学校会给指引。"
+    },
+    {
+      "id": "documents", "stage": "now", "blocking": true, "lead_time": "当天",
+      "title": "备齐一套证件电子件",
+      "why": "房东/中介几乎当天就要。临时找文件会直接错过房源。",
+      "how": "护照信息页、签证、录取/在读证明、税号、证件照、学校地址与联系人。统一放一个文件夹，手机也能调出来。完整清单（身份类/财务类/证明类）见 references/document_prep.md。"
+    },
+    {
+      "id": "funds", "stage": "now", "blocking": true, "lead_time": "1–2 周",
+      "title": "解决付款方式（押金 + 首月租）",
+      "why": "意大利房东常要现金或本地转账；跨行国际汇款到账慢，会拖掉签约。",
+      "how": "算清 押金(1–3 月) + 首月租 + 可能的按金/中介费 的现金需求；备好一张能刷的卡 + 可提现渠道；打通 IBAN 转账通道（跨行国际汇款到账慢，会拖掉签约）。收付款账号核验用 scripts/iban_check.py，填写资料字段对照见 references/document_prep.md。"
+    },
+    {
+      "id": "guarantor", "stage": "now", "blocking": false, "lead_time": "1–3 周",
+      "title": "想好担保方案（garante）",
+      "why": "外国学生最常被卡在'没有意大利收入证明'。提前想好替代方案就不慌。",
+      "how": "三选一：学校国际办介绍信 / 预付 2–3 个月房租 / 专门租房担保服务。先问房东为什么需要担保，多数时候预付款就能解决。"
+    },
+    {
+      "id": "visa_stay", "stage": "now", "blocking": true, "lead_time": "按当地规定",
+      "title": "确认居留/签证材料清单（含住宿证明）",
+      "why": "办居留需要住宿证明与合同；而合同又需要先找到房——这是最容易死锁的一环。",
+      "how": "先查清当地办居留需要什么住宿材料（合同？房东声明？hostel 证明过渡？），再决定找房的最低要求。"
+    },
+
+    {
+      "id": "accounts", "stage": "before_search", "blocking": true, "lead_time": "当天",
+      "title": "注册各渠道账号",
+      "why": "很多房源的联系方式锁在登录墙后，没账号连问都问不到。",
+      "how": "目标城市的学生房源板、二手分类站、社交群组。注意：部分学生房源板要勾选'本人系本校在读学生'声明，只能由学生本人注册。"
+    },
+    {
+      "id": "dedicated_email", "stage": "before_search", "blocking": false, "lead_time": "当天",
+      "title": "用一个专用邮箱收所有租房回信",
+      "why": "回信会很多且杂；混在私人邮箱里会漏。也便于统一核对与追踪。",
+      "how": "新建一个邮箱或邮箱别名，所有渠道留这一个地址；同时记好回信地址是谁。"
+    },
+    {
+      "id": "group_network", "stage": "before_search", "blocking": false, "lead_time": "1–2 天",
+      "title": "加入本地租房群 / 本校学联 / 国际办公室",
+      "why": "真正能谈 4–6 个月、能走 subentro 的房源一大半在群里，且几小时内被抢。进群=缩短信息时间差。",
+      "how": "按 references/group_and_network.md 的优先级：① 本校交换生群 ② 中国学联 ③ 城市租房群。加群与发帖必须本人操作。进群后把群名登记进 assets/sources.json（--type social_group）。"
+    },
+    {
+      "id": "budget_rule", "stage": "before_search", "blocking": true, "lead_time": "当天",
+      "title": "定死预算口径：按'月总成本'算，不按租金算",
+      "why": "意大利学生房杂费常 €80–150/月，只看租金会低估 30–45%。",
+      "how": "写下：租金上限 + 杂费预估 + 押金 + 一次性费用。任何房源都用'租金+杂费=月总成本'比较。"
+    },
+    {
+      "id": "scripts_ready", "stage": "before_search", "blocking": false, "lead_time": "当天",
+      "title": "把问询话术准备好（一次问全的 8 问）",
+      "why": "一问一答往返 24 小时；漏问一项就要多等一天。",
+      "how": "用 references/question_pack.md 里的首轮问询包，含自我介绍三张牌。"
+    },
+
+    {
+      "id": "viewing_kit", "stage": "before_viewing", "blocking": false, "lead_time": "当天",
+      "title": "看房工具包",
+      "why": "看房时最容易漏掉关键信息，回家才想起来。",
+      "how": "手机（拍照+录像，边走边拍）、卷尺、耳机（测噪音）、充电宝；出发前把通勤路线实测一遍（别信'步行几分钟'）。"
+    },
+    {
+      "id": "viewing_checklist", "stage": "before_viewing", "blocking": false, "lead_time": "当天",
+      "title": "看房必查 10 项",
+      "why": "签约后才发现的问题，全是钱。",
+      "how": "水压与热水、暖气/空调、网络信号、插座、窗户朝向与隔音、霉菌与潮气、门锁、公共区域清洁、室友情况、垃圾与洗衣。逐项拍照存证。"
+    },
+    {
+      "id": "viewing_buddy", "stage": "before_viewing", "blocking": false, "lead_time": "提前约",
+      "title": "约一个陪同人（同学/学长/学联）",
+      "why": "语言不熟时容易漏听关键条件，也少一层安全风险。",
+      "how": "优先找本校中国学联或已入住的学长学姐；其次是同学的意大利朋友。"
+    },
+
+    {
+      "id": "contract_check", "stage": "before_signing", "blocking": true, "lead_time": "签约当天",
+      "title": "合同要素逐条核对（8 项）",
+      "why": "签错的合同会影响居留、押金、退租，事后极难改。",
+      "how": "用 references/question_pack.md 的'签约前确认包'8 项。合同必须是意大利语；英文'合同'基本都是私约。"
+    },
+    {
+      "id": "registration_tax", "stage": "before_signing", "blocking": true, "lead_time": "签约后 30 天内",
+      "title": "确认合同会在税务局注册",
+      "why": "未注册的合同办不了居留，押金也没有法律凭据。注册费通常由房东承担。",
+      "how": "要求房东/中介提供注册凭证（Agenzia delle Entrate 的注册回执）。合同上必须有双方税号。"
+    },
+    {
+      "id": "landlord_verify", "stage": "before_signing", "blocking": true, "lead_time": "签约当天",
+      "title": "核验房东身份与房产权属",
+      "why": "假房东骗押金是海外租房最常见的骗局。",
+      "how": "核对身份证件与合同上的房东姓名/税号是否一致；要求看房产权属证明或委托书（中介需出示代理授权）。付押金只付给合同上的房东或中介对公账户。"
+    },
+    {
+      "id": "iban_safety", "stage": "before_signing", "blocking": true, "lead_time": "转账前 10 分钟",
+      "title": "付押金前核验 IBAN 与收款人姓名",
+      "why": "海外租房最常见的骗局就是押金打进别人账户。IBAN 格式对≠账户属于房东；抄错一位钱就没了。",
+      "how": "跑 python scripts/iban_check.py <IBAN> 过格式与 mod-97 校验；再看国家/币种（非 SEPA 会慢、会扣费）；然后在银行转账页核对收款人姓名与合同主体一致。不一致立刻停手。详见 references/document_prep.md。"
+    },
+    {
+      "id": "payment_receipt", "stage": "before_signing", "blocking": true, "lead_time": "签约当天",
+      "title": "押金与租金必须留收据",
+      "why": "没有收据 = 退押金时无凭据。",
+      "how": "要求写明金额、日期、用途、退还条件的中文/意文收据，签字。转账优先于现金。"
+    },
+
+    {
+      "id": "inventory", "stage": "after_moving", "blocking": true, "lead_time": "入住当天",
+      "title": "签家具与房屋状况清单（inventario）",
+      "why": "退租时押金争议几乎全部出在'东西是谁弄坏的'。",
+      "how": "入住当天逐间拍照/录像，列出家具与已有破损，双方签字，各留一份。"
+    },
+    {
+      "id": "utilities", "stage": "after_moving", "blocking": false, "lead_time": "1–2 周",
+      "title": "水电燃气网络过户或登记",
+      "why": "没登记可能被断供，或产生欠费挂在后续账单上。",
+      "how": "问清哪些是房东承担、哪些要自己开户（电 luce / 气 gas / 水 acqua / 网络 wifi），办理时留存客户号。"
+    },
+    {
+      "id": "contract_copy", "stage": "after_moving", "blocking": true, "lead_time": "1 周内",
+      "title": "把注册后的合同原件/副本存档",
+      "why": "办居留、续签、退税、退押金都要用。",
+      "how": "拿到注册回执+合同扫描件，存云端和本地各一份；把起止日期记进日历。"
+    },
+    {
+      "id": "notice_period", "stage": "after_moving", "blocking": true, "lead_time": "入住当天就记下",
+      "title": "记下退租通知期（disdetta）",
+      "why": "错过通知期会被多扣一个月甚至更久——这是最常被忽略、也最贵的一条。",
+      "how": "从合同里找出'提前多久通知退租'（常见 1–3 个月，挂号信 raccomandata 或 PEC），立刻设日历提醒。"
+    }
+  ]
+}
